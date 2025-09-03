@@ -1,8 +1,12 @@
+![platform](https://img.shields.io/static/v1?label=platform&message=mac-intel%20|%20mac-arm%20|%20win-64&color=blue)
+[![license](https://img.shields.io/github/license/miyako/pdfium-parser)](LICENSE)
+![downloads](https://img.shields.io/github/downloads/miyako/pdfium-parser/total)
+
 ### Dependencies and Licensing
 
 * the source code of this CLI tool is licensed under the MIT license.
 * **pdfium** is primarily licensed under the [Apache License 2.0](https://pdfium.googlesource.com/pdfium/+/main/LICENSE) license.
-* 
+ 
 # pdfium-parser
 CLI tool to extract text from PDF
 
