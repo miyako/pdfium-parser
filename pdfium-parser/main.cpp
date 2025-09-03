@@ -23,10 +23,10 @@ extern OPTARG_T optarg;
 extern int optind, opterr, optopt;
 
 #ifdef WIN32
-optarg = 0;
-opterr = 1;
-optind = 1;
-optopt = 0;
+OPTARG_T optarg = 0;
+int opterr = 1;
+int optind = 1;
+int optopt = 0;
 int getopt(int argc, OPTARG_T *argv, OPTARG_T opts) {
 
     static int sp = 1;
@@ -104,6 +104,44 @@ static void document_to_json(Document& document, std::string& text, bool rawText
     }
 }
 
+static std::string wchar_to_utf8(const wchar_t* wstr) {
+    if (!wstr) return std::string();
+
+    // Get required buffer size in bytes
+    int size_needed = WideCharToMultiByte(
+        CP_UTF8,            // convert to UTF-8
+        0,                  // default flags
+        wstr,               // source wide string
+        -1,                 // null-terminated
+        nullptr, 0,         // no output buffer yet
+        nullptr, nullptr
+    );
+
+    if (size_needed <= 0) return std::string();
+
+    // Allocate buffer
+    std::string utf8str(size_needed, 0);
+
+    // Perform conversion
+    WideCharToMultiByte(
+        CP_UTF8,
+        0,
+        wstr,
+        -1,
+        &utf8str[0],
+        size_needed,
+        nullptr,
+        nullptr
+    );
+
+    // Remove the extra null terminator added by WideCharToMultiByte
+    if (!utf8str.empty() && utf8str.back() == '\0') {
+        utf8str.pop_back();
+    }
+
+    return utf8str;
+}
+
 int main(int argc, OPTARG_T argv[]) {
     
     FPDF_InitLibrary();
@@ -116,7 +154,7 @@ int main(int argc, OPTARG_T argv[]) {
     int ch;
     std::string text;
     bool rawText = false;
-    std::string password;
+    OPTARG_T password = NULL;
     
     while ((ch = getopt(argc, argv, ARGS)) != -1){
         switch (ch){
@@ -166,10 +204,17 @@ int main(int argc, OPTARG_T argv[]) {
     
     Document document;
     
+    std::string pw;
+#ifdef WIN32
+    pw = wchar_to_utf8(password);
+#else
+    pw = password ? password : "";
+#endif
+
     FPDF_DOCUMENT doc = FPDF_LoadMemDocument(
                                              pdf_data.data(),
                                              (int)pdf_data.size(),
-                                             password.length() ? password.c_str() : nullptr);
+        pw.length() ? pw.c_str() : nullptr);
 
     if(doc){
         
