@@ -104,6 +104,7 @@ static void document_to_json(Document& document, std::string& text, bool rawText
     }
 }
 
+#ifdef _WIN32
 static std::string wchar_to_utf8(const wchar_t* wstr) {
     if (!wstr) return std::string();
 
@@ -141,6 +142,7 @@ static std::string wchar_to_utf8(const wchar_t* wstr) {
 
     return utf8str;
 }
+#endif
 
 int main(int argc, OPTARG_T argv[]) {
     
