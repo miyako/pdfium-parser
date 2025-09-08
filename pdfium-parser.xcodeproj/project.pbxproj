@@ -25,12 +25,6 @@
 
 /* Begin PBXFileReference section */
 		D157F30C2E612DD500DF46D3 /* libjsoncpp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjsoncpp.a; path = a/libjsoncpp.a; sourceTree = "<group>"; };
-		D157F30D2E612DD500DF46D3 /* libopc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopc.a; path = a/libopc.a; sourceTree = "<group>"; };
-		D157F30E2E612DD500DF46D3 /* libplib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libplib.a; path = a/libplib.a; sourceTree = "<group>"; };
-		D157F30F2E612DD500DF46D3 /* libxml2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libxml2.a; path = a/libxml2.a; sourceTree = "<group>"; };
-		D157F3102E612DD500DF46D3 /* libmce.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmce.a; path = a/libmce.a; sourceTree = "<group>"; };
-		D157F3112E612DD500DF46D3 /* libiconv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libiconv.a; path = a/libiconv.a; sourceTree = "<group>"; };
-		D157F31B2E613ACD00DF46D3 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		D16478942E611F7700FC9914 /* pdfium-parser */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "pdfium-parser"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D164789E2E61216B00FC9914 /* pdfium-config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "pdfium-config.xcconfig"; sourceTree = "<group>"; };
 		D1DB33D12E67E67D00C843BE /* libpdfium.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpdfium.dylib; path = macOS/libpdfium.dylib; sourceTree = "<group>"; };
@@ -61,13 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				D1DB33D12E67E67D00C843BE /* libpdfium.dylib */,
-				D157F31B2E613ACD00DF46D3 /* libz.tbd */,
-				D157F3112E612DD500DF46D3 /* libiconv.a */,
 				D157F30C2E612DD500DF46D3 /* libjsoncpp.a */,
-				D157F3102E612DD500DF46D3 /* libmce.a */,
-				D157F30D2E612DD500DF46D3 /* libopc.a */,
-				D157F30E2E612DD500DF46D3 /* libplib.a */,
-				D157F30F2E612DD500DF46D3 /* libxml2.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
