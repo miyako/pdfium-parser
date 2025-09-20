@@ -29,7 +29,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#define BUFLEN 1024
+#define BUFLEN 4096
 
 #ifdef __GNUC__
 #define _fopen fopen

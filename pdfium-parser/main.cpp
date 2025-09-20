@@ -201,11 +201,22 @@ int main(int argc, OPTARG_T argv[]) {
                 break;
             case '-':
             {
+                std::vector<uint8_t> buf(BUFLEN);
+                size_t n;
+
+                    while ((n = fread(buf.data(), 1, buf.size(), stdin)) > 0) {
+                        pdf_data.insert(pdf_data.end(), buf.begin(), buf.begin() + n);
+                    }
+                
+                /*
                 _fseek(stdin, 0, SEEK_END);
                 size_t len = (size_t)_ftell(stdin);
                 _fseek(stdin, 0, SEEK_SET);
                 pdf_data.resize(len);
                 fread(pdf_data.data(), 1, pdf_data.size(), stdin);
+                 */
+                
+                
             }
                 break;
             case 'r':
