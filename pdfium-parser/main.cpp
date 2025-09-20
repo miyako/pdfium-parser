@@ -11,13 +11,41 @@ static void usage(void)
 {
     fprintf(stderr, "Usage:  pdfium-parser -r -i in -o out -\n\n");
     fprintf(stderr, "text extractor for pdf documents\n\n");
-    fprintf(stderr, " -%c path: %s\n", 'i' , "document to parse");
-    fprintf(stderr, " -%c path: %s\n", 'o' , "text output (default=stdout)");
-    fprintf(stderr, " %c: %s\n", '-' , "use stdin for input");
-    fprintf(stderr, " -%c: %s\n", 'r' , "raw text output (default=json)");
-    fprintf(stderr, " -%c: %s\n", 'p' , "password");
+    fprintf(stderr, " -%c path    : %s\n", 'i' , "document to parse");
+    fprintf(stderr, " -%c path    : %s\n", 'o' , "text output (default=stdout)");
+    fprintf(stderr, " %c          : %s\n", '-' , "use stdin for input");
+    fprintf(stderr, " -%c         : %s\n", 'r' , "raw text output (default=json)");
+    fprintf(stderr, " -%c pass    : %s\n", 'p' , "password");
     exit(1);
 }
+
+#if WITH_NATIVE_UTF_DECODE
+static void utf16_to_utf8(const uint8_t *u16data, size_t u16size, std::string& u8) {
+    
+#ifdef __APPLE__
+    CFStringRef str = CFStringCreateWithCharacters(kCFAllocatorDefault, (const UniChar *)u16data, u16size);
+    if(str){
+        size_t size = CFStringGetMaximumSizeForEncoding(CFStringGetLength(str), kCFStringEncodingUTF8) + sizeof(uint8_t);
+        std::vector<uint8_t> buf(size+1);
+        CFIndex len = 0;
+        CFStringGetBytes(str, CFRangeMake(0, CFStringGetLength(str)), kCFStringEncodingUTF8, 0, true, (UInt8 *)buf.data(), buf.size(), &len);
+        u8 = (const char *)buf.data();
+        CFRelease(str);
+    }else{
+        u8 = "";
+    }
+#else
+    int len = WideCharToMultiByte(CP_UTF8, 0, (LPCWSTR)u16data, u16size, NULL, 0, NULL, NULL);
+    if(len){
+        std::vector<uint8_t> buf(len + 1);
+        WideCharToMultiByte(CP_UTF8, 0, (LPCWSTR)u16data, u16size, (LPSTR)buf.data(), buf.size(), NULL, NULL);
+        u8 = (const char *)buf.data();
+    }else{
+        u8 = "";
+    }
+#endif
+}
+#endif
 
 extern OPTARG_T optarg;
 extern int optind, opterr, optopt;
@@ -144,6 +172,8 @@ static std::string wchar_to_utf8(const wchar_t* wstr) {
 }
 #endif
 
+const std::string u_fffe = "\xEF\xBF\xBE";
+
 int main(int argc, OPTARG_T argv[]) {
     
     FPDF_InitLibrary();
@@ -238,6 +268,10 @@ int main(int argc, OPTARG_T argv[]) {
             FPDFText_GetText(text_page, 0, nChars, reinterpret_cast<unsigned short*>(&utf16[0]));
             
             std::string utf8;
+            
+#if WITH_NATIVE_UTF_DECODE
+            utf16_to_utf8((const uint8_t *)utf16.data(), utf16.size() * sizeof(char16_t), utf8);
+#else
             for (char16_t ch : utf16) {
                 if (ch == 0) break;
                 if (ch < 0x80) {
@@ -250,6 +284,12 @@ int main(int argc, OPTARG_T argv[]) {
                     utf8.push_back(0x80 | ((ch >> 6) & 0x3F));
                     utf8.push_back(0x80 | (ch & 0x3F));
                 }
+            }
+#endif
+            
+            size_t pos = 0;
+            while ((pos = utf8.find(u_fffe, pos)) != std::string::npos) {
+                utf8.erase(pos, u_fffe.length());
             }
             
             t = utf8;

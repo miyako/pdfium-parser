@@ -14,6 +14,17 @@
 #include <fpdf_text.h>
 #include <fpdf_annot.h>
 
+#define WITH_NATIVE_UTF_DECODE 0
+
+#if WITH_NATIVE_UTF_DECODE
+#if defined(_WIN32)
+#include <windows.h>
+#endif
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+#endif
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
