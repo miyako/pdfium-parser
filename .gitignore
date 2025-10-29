@@ -2,3 +2,5 @@
 pdfium-parser/x64/*
 x64/Release/pdfium-parser.pdb
 .build/*
+macOS/pdfium-parser.dSYM/*
+pdfium-parser.xcodeproj/project.xcworkspace/xcuserdata/miyako.xcuserdatad/UserInterfaceState.xcuserstate
